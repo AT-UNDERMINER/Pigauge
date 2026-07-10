@@ -1,0 +1,88 @@
+# PiGauge main configuration — hardware map & runtime settings.
+# Pin assignments MUST match docs/HARDWARE.md (that file is authoritative).
+
+vehicle_profile: config/vehicles/generic_obd2.yaml
+
+sources:
+  can:
+    enabled: false            # enable after MCP2515 HAT bring-up (Phase 4)
+    interface: can0
+  elm327:
+    enabled: false            # USB PIC18F25K80/FT232RL cable
+    port: /dev/ttyUSB0
+    baudrate: 38400
+  ads1115:
+    enabled: false            # Phase 5
+    i2c_bus: 1
+    address: 0x48
+    channels:
+      boost.pressure:
+        adc_channel: 0
+        transfer: {type: linear, v_min: 0.1667, v_max: 1.5, out_min: -101.3, out_max: 201.3}  # 3-bar MAP behind 10k/20k divider, gauge kPa
+        filter: {type: ema, alpha: 0.4}
+      oil.pressure:
+        adc_channel: 1
+        transfer: {type: linear, v_min: 0.1667, v_max: 1.5, out_min: 0, out_max: 1034}        # 0-150 psi transducer, kPa
+      electrical.battery_v:
+        adc_channel: 3
+        transfer: {type: linear, v_min: 0.0, v_max: 3.3, out_min: 0.0, out_max: 18.3}          # 10k/2k2 divider
+  max31856:
+    enabled: false            # Phase 5 — EGT
+    spi_bus: 1
+    cs_pin: 26
+    channel: exhaust.egt1
+    tc_type: K
+  sim:
+    enabled: true             # dev default; disable on the vehicle
+    seed: 42
+
+displays:
+  - name: boost_pod
+    driver: virtual           # swap to gc9a01 on the Pi (Phase 3)
+    resolution: [240, 240]
+    shape: round
+    layout: config/gauges/single_round_boost.yaml
+    # gc9a01 driver settings (used when driver: gc9a01):
+    spi_bus: 1
+    cs_pin: 18
+    dc_pin: 16
+    rst_pin: 13
+    backlight_pin: 12
+    spi_hz: 40000000
+    rotation: 0
+
+alerts:
+  buzzer_pin: 23
+  rules:
+    - channel: engine.coolant_temp
+      warn: 100
+      critical: 105
+      direction: above
+      hysteresis: 3
+    - channel: exhaust.egt1
+      warn: 500
+      critical: 550
+      direction: above
+      hysteresis: 20
+    - channel: oil.pressure
+      critical: 100            # kPa
+      direction: below
+      hysteresis: 25
+      qualifier: {channel: engine.rpm, above: 1500}
+
+logging:
+  enabled: false
+  db_path: data/pigauge.sqlite
+  max_size_mb: 512
+
+system:
+  ignition_pin: 24            # active LOW via PC817 opto (docs/HARDWARE.md)
+  shutdown_grace_s: 15
+
+web:
+  enabled: true
+  host: 0.0.0.0
+  port: 8080
+
+render:
+  target_fps: 30

@@ -1,0 +1,7 @@
+# Nissan Patrol GU (Y61) ZD30DDTi CRD — STUB.
+# Run `python -m pigauge.tools.scan_vehicle` on the vehicle (Phase 4) and fill
+# in: detected transport/protocol, supported PID list, achievable poll rates.
+# See docs/PROTOCOLS.md § Patrol notes. Until then this inherits generic_obd2.
+name: Nissan Patrol GU ZD30 CRD (UNVERIFIED)
+inherits: config/vehicles/generic_obd2.yaml
+transport: auto

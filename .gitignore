@@ -1,0 +1,12 @@
+__pycache__/
+*.pyc
+*.egg-info/
+.venv/
+venv/
+.pytest_cache/
+.ruff_cache/
+/tmp/
+*.png.tmp
+data/*.sqlite
+logs/
+graphify-out/

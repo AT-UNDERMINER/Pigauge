@@ -1,0 +1,14 @@
+name: Generic OBD2
+transport: auto
+can: {bitrate: 500000, request_id: 0x7DF, response_ids: [0x7E8, 0x7E9]}
+elm327: {batch_pids: true}
+channels:
+  engine.rpm:           {pid: 0x0C, rate_hz: 10}
+  engine.map:           {pid: 0x0B, rate_hz: 10}
+  vehicle.speed:        {pid: 0x0D, rate_hz: 5}
+  engine.throttle:      {pid: 0x11, rate_hz: 5}
+  engine.load:          {pid: 0x04, rate_hz: 2}
+  engine.coolant_temp:  {pid: 0x05, rate_hz: 1}
+  engine.intake_temp:   {pid: 0x0F, rate_hz: 1}
+  ambient.baro:         {pid: 0x33, rate_hz: 0.1}
+  electrical.battery_v: {pid: 0x42, rate_hz: 0.5}

@@ -1,0 +1,16 @@
+[Unit]
+Description=PiGauge digital gauge system
+After=network.target
+
+[Service]
+Type=simple
+WorkingDirectory=/home/pi/pigauge
+ExecStartPre=/bin/sh -c '/sbin/ip link set can0 up type can bitrate 500000 || true'
+ExecStart=/home/pi/pigauge/.venv/bin/python -m pigauge --config config/default.yaml
+Restart=on-failure
+RestartSec=3
+# Allow poweroff for ignition-off shutdown (Phase 7)
+User=root
+
+[Install]
+WantedBy=multi-user.target

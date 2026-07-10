@@ -1,0 +1,26 @@
+# Layout: single 240x240 round boost gauge (52mm pod)
+name: Boost — round pod
+canvas: {width: 240, height: 240, shape: round, background: "#0a0a0f"}
+widgets:
+  - type: arc_gauge
+    channel: boost.pressure
+    display_unit: psi
+    position: {x: 120, y: 120}
+    radius: 110
+    sweep: {start_deg: 135, end_deg: 405}
+    range: {min: -15, max: 30}
+    redline: {from: 22}
+    ticks: {major: 5, minor: 1}
+    colors: {arc: "#2dd4bf", redline: "#ef4444", text: "#f5f5f5"}
+  - type: numeric_readout
+    channel: boost.pressure
+    display_unit: psi
+    position: {x: 120, y: 150}
+    font_size: 42
+    decimals: 1
+  - type: numeric_readout
+    channel: exhaust.egt1
+    display_unit: C
+    position: {x: 120, y: 195}
+    font_size: 18
+    label: EGT

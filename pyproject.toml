@@ -1,0 +1,46 @@
+[build-system]
+requires = ["setuptools>=68"]
+build-backend = "setuptools.build_meta"
+
+[project]
+name = "pigauge"
+version = "0.1.0"
+description = "Modular smart digital gauge system for vehicles (OBD2/CAN + analog sensors on Raspberry Pi)"
+requires-python = ">=3.11"
+dependencies = [
+    "pydantic>=2.5",
+    "PyYAML>=6.0",
+    "Pillow>=10.0",
+    "flask>=3.0",
+]
+
+[project.optional-dependencies]
+dev = [
+    "pytest>=8.0",
+    "pytest-timeout",
+    "ruff>=0.4",
+]
+vehicle = [
+    "python-can>=4.3",     # socketcan / MCP2515
+    "pyserial>=3.5",       # ELM327 adapters
+]
+pi = [
+    "gpiozero>=2.0",
+    "spidev",
+    "smbus2",              # ADS1115
+    "pygame>=2.5",         # HDMI framebuffer (KMSDRM)
+]
+
+[tool.pytest.ini_options]
+testpaths = ["tests"]
+markers = [
+    "vcan: requires a Linux vcan0 interface (scripts/vcan_up.sh)",
+    "hardware: requires physical Pi hardware",
+]
+
+[tool.ruff]
+line-length = 100
+target-version = "py311"
+
+[tool.ruff.lint]
+select = ["E", "F", "W", "I", "N", "UP", "B"]

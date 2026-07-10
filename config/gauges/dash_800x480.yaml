@@ -1,0 +1,15 @@
+# Layout: rectangular dash — RPM sweep, boost, temps, oil, volts
+name: Main dash 800x480
+canvas: {width: 800, height: 480, shape: rect, background: "#0a0a0f"}
+widgets:
+  - {type: bar_gauge, channel: engine.rpm, position: {x: 400, y: 50}, width: 720, height: 60,
+     range: {min: 0, max: 4500}, redline: {from: 3800}}
+  - {type: arc_gauge, channel: boost.pressure, display_unit: psi, position: {x: 150, y: 280},
+     radius: 120, sweep: {start_deg: 135, end_deg: 405}, range: {min: -15, max: 30}, redline: {from: 22}}
+  - {type: arc_gauge, channel: engine.coolant_temp, display_unit: C, position: {x: 400, y: 280},
+     radius: 120, sweep: {start_deg: 135, end_deg: 405}, range: {min: 40, max: 120}, redline: {from: 105}}
+  - {type: arc_gauge, channel: exhaust.egt1, display_unit: C, position: {x: 650, y: 280},
+     radius: 120, sweep: {start_deg: 135, end_deg: 405}, range: {min: 0, max: 800}, redline: {from: 550}}
+  - {type: numeric_readout, channel: oil.pressure, display_unit: psi, position: {x: 150, y: 440}, label: OIL, font_size: 28}
+  - {type: numeric_readout, channel: electrical.battery_v, display_unit: V, position: {x: 400, y: 440}, label: BATT, font_size: 28, decimals: 1}
+  - {type: numeric_readout, channel: vehicle.speed, display_unit: kmh, position: {x: 650, y: 440}, label: SPEED, font_size: 28}
