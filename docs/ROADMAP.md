@@ -4,11 +4,11 @@ Each phase is independently shippable and ends with all acceptance criteria met,
 tests green, and CHANGELOG.md updated. Claude Code: work strictly in order.
 
 ## Phase 0 — Scaffold & tooling
-- [ ] Package layout under src/pigauge/, installable with `pip install -e .`
-- [ ] pytest + ruff configured (pyproject.toml); `pytest -q` runs the smoke test
-- [ ] Config loader: pydantic models for default.yaml, gauge layouts, vehicle
+- [x] Package layout under src/pigauge/, installable with `pip install -e .`
+- [x] pytest + ruff configured (pyproject.toml); `pytest -q` runs the smoke test
+- [x] Config loader: pydantic models for default.yaml, gauge layouts, vehicle
       profiles; invalid config raises ConfigError with file/field context
-- [ ] `python -m pigauge --check-config config/dev_sim.yaml` validates and exits
+- [x] `python -m pigauge --check-config config/dev_sim.yaml` validates and exits
 
 **Accept:** fresh clone → `pip install -e .[dev]` → `pytest` green.
 
