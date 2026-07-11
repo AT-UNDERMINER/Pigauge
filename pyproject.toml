@@ -19,6 +19,7 @@ dev = [
     "pytest>=8.0",
     "pytest-timeout",
     "ruff>=0.4",
+    "hypothesis>=6.100",
 ]
 vehicle = [
     "python-can>=4.3",     # socketcan / MCP2515
