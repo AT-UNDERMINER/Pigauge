@@ -21,8 +21,8 @@ class Display(ABC):
     def show(self, frame: Image.Image) -> None:
         """Present a frame. Must not block longer than one frame period."""
 
-    def set_backlight(self, level: float) -> None:
+    def set_backlight(self, level: float) -> None:  # noqa: B027 - optional hook
         """Optional 0.0-1.0 brightness; default no-op for displays without it."""
 
-    def close(self) -> None:
+    def close(self) -> None:  # noqa: B027 - optional hook
         """Release hardware resources; default no-op."""

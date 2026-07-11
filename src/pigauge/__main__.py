@@ -7,6 +7,7 @@ application bootstrap (load config -> build sources/displays -> run loops).
 import argparse
 import sys
 
+
 def main() -> int:
     parser = argparse.ArgumentParser(prog="pigauge", description="PiGauge digital gauge system")
     parser.add_argument("--config", default="config/default.yaml")
