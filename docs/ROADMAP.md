@@ -13,13 +13,13 @@ tests green, and CHANGELOG.md updated. Claude Code: work strictly in order.
 **Accept:** fresh clone → `pip install -e .[dev]` → `pytest` green.
 
 ## Phase 1 — Core: DataBus, channels, units, simulator
-- [ ] core/units.py: base units per quantity + conversions (kPa↔psi/bar, °C↔°F,
+- [x] core/units.py: base units per quantity + conversions (kPa↔psi/bar, °C↔°F,
       km/h↔mph), property-tested round-trips
-- [ ] core/channels.py: canonical channel registry (id, quantity, stale_after)
-- [ ] core/databus.py: thread-safe publish/get/subscribe with staleness
-- [ ] sources/sim.py: SimSource generating plausible driving data (idle → rev →
+- [x] core/channels.py: canonical channel registry (id, quantity, stale_after)
+- [x] core/databus.py: thread-safe publish/get/subscribe with staleness
+- [x] sources/sim.py: SimSource generating plausible driving data (idle → rev →
       cruise cycles) for every registered channel; deterministic with a seed
-- [ ] Optional replay mode: SimSource can replay a CSV log at real-time speed
+- [x] Optional replay mode: SimSource can replay a CSV log at real-time speed
 
 **Accept:** unit tests for bus concurrency (publisher thread + reader), staleness
 transitions, unit conversions; `python -m pigauge.tools.bus_monitor` prints live
