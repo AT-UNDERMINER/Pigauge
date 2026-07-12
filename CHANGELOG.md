@@ -2,6 +2,27 @@
 
 ## Unreleased
 
+### Phase 2 — Render engine + VirtualDisplay (complete)
+- `render/canvas.py`: Canvas ABC (line, polyline, arc, circle, rect,
+  polygon, text) with the Pillow backend using the embedded default font;
+  pygame backend arrives in Phase 3.
+- `render/widgets/`: NumericReadout, ArcGauge (sweep, ticks, redline
+  zone), NeedleGauge, BarGauge, Sparkline, StatusIcon — selected by layout
+  `type` via WIDGET_REGISTRY. Base-to-display unit conversion happens at
+  draw time; STALE or missing readings render grey.
+- `render/scene.py`: GaugeScene builds widgets from a validated layout
+  (failing fast on unknown types/channels) and renders frames from the
+  latest bus values without blocking.
+- `displays/virtual.py`: VirtualDisplay keeps the latest frame
+  (thread-safe copy, resolution-checked) for previews, tests, and the
+  future MJPEG stream.
+- `tools/render_preview.py`: renders a layout against a deterministic
+  simulation snapshot (`--seed`, `--sim-time`, `--stale`), producing
+  byte-identical PNGs for identical arguments.
+- Golden-image tests: both shipped layouts plus a stale variant, approved
+  by eye then locked into tests/fixtures/golden/ with an RMS tolerance.
+- Pillow floor raised to 10.1 (`ImageFont.load_default(size=...)`).
+
 ### Phase 1 — Core: DataBus, channels, units, simulator (complete)
 - `core/units.py`: base units per quantity (kPa, °C, km/h, RPM, %, V) and
   affine conversions for psi, bar, °F, mph; hypothesis property tests

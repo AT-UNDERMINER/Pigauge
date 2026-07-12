@@ -10,3 +10,4 @@ venv/
 data/*.sqlite
 logs/
 graphify-out/
+previews/

@@ -26,14 +26,14 @@ transitions, unit conversions; `python -m pigauge.tools.bus_monitor` prints live
 simulated values in the terminal.
 
 ## Phase 2 — Render engine + VirtualDisplay
-- [ ] Canvas abstraction over Pillow (and later pygame)
-- [ ] Widgets: NumericReadout, ArcGauge (sweep, ticks, redline zone), NeedleGauge
+- [x] Canvas abstraction over Pillow (and later pygame)
+- [x] Widgets: NumericReadout, ArcGauge (sweep, ticks, redline zone), NeedleGauge
       (classic round dial), BarGauge, Sparkline, StatusIcon
-- [ ] GaugeScene: build from layout YAML, per-frame update from DataBus,
+- [x] GaugeScene: build from layout YAML, per-frame update from DataBus,
       display-unit conversion, stale = greyed
-- [ ] displays/virtual.py: VirtualDisplay saving latest frame; render_preview CLI
+- [x] displays/virtual.py: VirtualDisplay saving latest frame; render_preview CLI
       tool outputs PNG for a layout + simulated data
-- [ ] Golden-image tests: render fixed scenes with fixed data, compare to
+- [x] Golden-image tests: render fixed scenes with fixed data, compare to
       tests/fixtures/golden/*.png within tolerance
 
 **Accept:** `render_preview --layout config/gauges/single_round_boost.yaml` produces
