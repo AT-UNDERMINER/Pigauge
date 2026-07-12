@@ -2,6 +2,26 @@
 
 ## Unreleased
 
+### Phase 3 — Physical displays (dev-side complete; on-Pi acceptance PENDING)
+- `displays/gc9a01.py` (+ `gc9a01_init.py`): SPI driver — Pillow frame →
+  big-endian RGB565 via channel LUTs (no numpy), vendor init sequence,
+  CS-pin→chip-enable mapping per HARDWARE.md, MADCTL rotation, PWM
+  backlight. spidev/gpiozero are guarded optional imports
+  (`pip install 'pigauge[pi]'`); unit-tested against fake SPI/pins.
+- `displays/framebuffer.py`: pygame KMSDRM fullscreen dash driver;
+  guarded pygame import; unit-tested against a fake pygame module.
+- `displays/__init__.py`: DISPLAY_REGISTRY / create_display — drivers
+  selected by config `driver` name (virtual | gc9a01 | framebuffer).
+- `render/loop.py`: RenderLoop services every configured display, each
+  bound to its own layout; per-display smoothed FPS; new
+  `render.fps_overlay` debug flag stamps achieved FPS on frames
+  (documented in config/default.yaml and dev_sim.yaml).
+- `scripts/bench_display.py`: reports frames + average FPS per display
+  (uncapped by default, `--target-fps` to pace).
+- NOT yet verified (needs the Pi): physical GC9A01/HDMI bring-up, FPS
+  budgets (GC9A01 ≥ 25 FPS, ≥ 15 with two; HDMI ≥ 30 FPS), MADCTL
+  rotation/colour-order values, and the vendor init sequence.
+
 ### Phase 2 — Render engine + VirtualDisplay (complete)
 - `render/canvas.py`: Canvas ABC (line, polyline, arc, circle, rect,
   polygon, text) with the Pillow backend using the embedded default font;
