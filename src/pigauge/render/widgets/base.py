@@ -6,7 +6,11 @@ abstraction so they work on both Pillow and pygame backends.
 """
 
 from abc import ABC, abstractmethod
-from typing import Any
+from typing import TYPE_CHECKING, Any
+
+if TYPE_CHECKING:
+    from pigauge.core.databus import Reading
+    from pigauge.render.canvas import Canvas
 
 
 class Widget(ABC):
@@ -17,5 +21,5 @@ class Widget(ABC):
         self.channel: str | None = config.get("channel")
 
     @abstractmethod
-    def draw(self, canvas: "Canvas", reading: "Reading | None") -> None:  # noqa: F821
+    def draw(self, canvas: "Canvas", reading: "Reading | None") -> None:
         """Draw current state. A None or STALE reading renders greyed out."""
