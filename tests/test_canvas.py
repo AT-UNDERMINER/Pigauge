@@ -72,4 +72,4 @@ def test_text_renders_pixels(canvas):
 
 
 def test_font_cache_reuses_instances():
-    assert PillowCanvas._font(17) is PillowCanvas._font(17)
+    assert PillowCanvas.font(17) is PillowCanvas.font(17)

@@ -17,6 +17,7 @@ from pigauge.core.config.loader import (
     load_app_config,
     load_gauge_layout,
     load_vehicle_profile,
+    resolve_config_path,
 )
 from pigauge.core.config.models import AppConfig, GaugeLayout, VehicleProfile
 
@@ -30,4 +31,5 @@ __all__ = [
     "load_app_config",
     "load_gauge_layout",
     "load_vehicle_profile",
+    "resolve_config_path",
 ]

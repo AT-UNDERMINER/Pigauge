@@ -86,3 +86,4 @@ web:
 
 render:
   target_fps: 30
+  fps_overlay: false          # debug: stamp achieved FPS on every frame

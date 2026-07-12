@@ -191,6 +191,8 @@ class RenderConfig(StrictModel):
     """Render loop settings."""
 
     target_fps: int = Field(default=DEFAULT_TARGET_FPS, gt=0)
+    fps_overlay: bool = False
+    """Debug flag: draw the achieved FPS onto every frame (Phase 3)."""
 
 
 class AppConfig(StrictModel):

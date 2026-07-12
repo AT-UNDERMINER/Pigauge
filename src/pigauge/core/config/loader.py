@@ -60,23 +60,23 @@ def check_config(path: str | Path, base_dir: str | Path | None = None) -> CheckR
     gauge layout. Raises :class:`ConfigError` on the first invalid file.
     """
     base = Path(base_dir) if base_dir is not None else Path.cwd()
-    app_path = _resolve(path, base)
+    app_path = resolve_config_path(path, base)
     app_config = load_app_config(app_path)
     checked = [app_path]
 
-    profile_path = _resolve(app_config.vehicle_profile, base)
+    profile_path = resolve_config_path(app_config.vehicle_profile, base)
     load_vehicle_profile(profile_path, base_dir=base)
     checked.append(profile_path)
 
     for display in app_config.displays:
-        layout_path = _resolve(display.layout, base)
+        layout_path = resolve_config_path(display.layout, base)
         load_gauge_layout(layout_path)
         checked.append(layout_path)
 
     return CheckResult(app_config=app_config, validated_files=checked)
 
 
-def _resolve(path: str | Path, base_dir: Path) -> Path:
+def resolve_config_path(path: str | Path, base_dir: Path) -> Path:
     """Resolve a possibly-relative config path against the project root."""
     candidate = Path(path)
     return candidate if candidate.is_absolute() else base_dir / candidate
@@ -105,7 +105,7 @@ def _read_profile_chain(path: Path, base_dir: Path, seen: list[Path]) -> dict[st
     parent_ref = data.get("inherits")
     if parent_ref is None:
         return data
-    parent_path = _resolve(parent_ref, base_dir)
+    parent_path = resolve_config_path(parent_ref, base_dir)
     parent = _read_profile_chain(parent_path, base_dir, [*seen, marker])
     return _merge_mappings(parent, data)
 

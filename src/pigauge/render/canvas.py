@@ -148,10 +148,10 @@ class PillowCanvas(Canvas):
         size: int,
         anchor: str = "mm",
     ) -> None:
-        self._draw.text(position, message, fill=color, font=self._font(int(size)), anchor=anchor)
+        self._draw.text(position, message, fill=color, font=self.font(int(size)), anchor=anchor)
 
     @classmethod
-    def _font(cls, size: int) -> ImageFont.FreeTypeFont:
+    def font(cls, size: int) -> ImageFont.FreeTypeFont:
         """Pillow's embedded default font, cached per size (no system fonts)."""
         if size not in cls._fonts:
             cls._fonts[size] = ImageFont.load_default(size=size)
