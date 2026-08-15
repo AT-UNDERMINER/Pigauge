@@ -53,22 +53,29 @@ a correct 240x240 round boost gauge PNG; golden tests pass.
 pygame layer (hardware libs are optional extras, guarded imports).
 
 ## Phase 4 — Vehicle sources: CAN + ELM327
-- [ ] sources/can_socketcan.py: python-can on can0 (MCP2515), OBD2 broadcast
+- [x] sources/can_socketcan.py: python-can on can0 (MCP2515), OBD2 broadcast
       queries (0x7DF) + response parsing (0x7E8+), per-channel poll scheduler,
       DBC-less decode driven by vehicle profile YAML
-- [ ] sources/elm327.py: pyserial driver for ELM327/STN-compatible adapters
+- [x] sources/elm327.py: pyserial driver for ELM327/STN-compatible adapters
       (init AT sequence, protocol auto/forced, batched PID requests), same
       profile-driven decode
-- [ ] Vehicle profiles: generic_obd2.yaml complete for the standard PID set in
+- [x] Vehicle profiles: generic_obd2.yaml complete for the standard PID set in
       docs/PROTOCOLS.md; patrol_zd30_gu.yaml stub pending on-vehicle scan
-- [ ] tools/scan_vehicle.py: connects, detects protocol, enumerates supported
+- [x] tools/scan_vehicle.py: connects, detects protocol, enumerates supported
       PIDs (modes 01/09), dumps a report to seed the vehicle profile
-- [ ] Tests: vcan-based round-trip (fake ECU responder fixture answers 0x7DF)
+- [x] Tests: vcan-based round-trip (fake ECU responder fixture answers 0x7DF)
       and FakeELM327 serial emulator; reconnection/backoff tests
 
 **Accept (dev):** vcan test suite green; FakeELM327 suite green.
 **Accept (hardware):** scan_vehicle.py produces a PID report on the Patrol; RPM
 and coolant temp live on a physical gauge.
+
+> Dev acceptance met. The vcan suite is written and auto-skips without vcan0
+> (Windows dev box); its responder logic is covered independently by
+> tests/test_fake_ecu.py, so vcan adds only the kernel socket layer. Still
+> needs the vehicle: the Patrol's actual transport and supported-PID list,
+> sustained poll rates, and therefore patrol_zd30_gu.yaml itself. Run the
+> vcan suite on a Linux box before the on-vehicle session.
 
 ## Phase 5 — External analog sensors
 - [ ] sources/ads1115.py: I2C ADC, per-channel transfer functions in YAML

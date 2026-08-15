@@ -12,3 +12,4 @@ channels:
   engine.intake_temp:   {pid: 0x0F, rate_hz: 1}
   ambient.baro:         {pid: 0x33, rate_hz: 0.1}
   electrical.battery_v: {pid: 0x42, rate_hz: 0.5}
+  fuel.level:           {pid: 0x2F, rate_hz: 0.1}

@@ -4,9 +4,12 @@
 vehicle_profile: config/vehicles/generic_obd2.yaml
 
 sources:
+  # Which links are fitted. What the vehicle speaks lives in the vehicle
+  # profile (transport: auto|can|elm327); a source runs only when both agree.
+  # Needs the vehicle extras: pip install 'pigauge[vehicle]'
   can:
-    enabled: false            # enable after MCP2515 HAT bring-up (Phase 4)
-    interface: can0
+    enabled: false            # enable after MCP2515 HAT bring-up
+    interface: can0           # bitrate is set by `ip link`, not here
   elm327:
     enabled: false            # USB PIC18F25K80/FT232RL cable
     port: /dev/ttyUSB0

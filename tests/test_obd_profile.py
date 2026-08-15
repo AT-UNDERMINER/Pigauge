@@ -5,6 +5,7 @@ import pytest
 from pigauge.core.config.errors import ConfigError
 from pigauge.core.config.loader import load_vehicle_profile
 from pigauge.core.config.models import ChannelPollConfig, VehicleProfile
+from pigauge.sources.obd_pids import PID_DECODERS
 from pigauge.sources.obd_profile import build_poll_plan
 
 GENERIC_PROFILE = "config/vehicles/generic_obd2.yaml"
@@ -32,7 +33,13 @@ class TestShippedProfiles:
             "engine.intake_temp",
             "ambient.baro",
             "electrical.battery_v",
+            "fuel.level",
         }
+
+    def test_generic_profile_covers_every_standard_pid(self):
+        """Roadmap Phase 4: complete for the docs/PROTOCOLS.md PID set."""
+        plan = build_poll_plan(load_vehicle_profile(GENERIC_PROFILE))
+        assert {entry.pid for entry in plan} == set(PID_DECODERS)
 
     def test_patrol_stub_inherits_a_valid_plan(self):
         # The stub must stay loadable while its real PID set is unscanned.

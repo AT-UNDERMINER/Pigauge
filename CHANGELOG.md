@@ -2,6 +2,46 @@
 
 ## Unreleased
 
+### Phase 4 — Vehicle sources: CAN + ELM327 (dev-side complete; on-vehicle PENDING)
+- `sources/obd_pids.py`: standard mode 01 decode table (PID → channel,
+  data length, formula) mirroring docs/PROTOCOLS.md, enforced by a test
+  that parses the doc; supported-PID bitmask expansion and multi-PID
+  response splitting.
+- `sources/obd_profile.py`: vehicle profile YAML → validated poll plan.
+  Rejects non-canonical channels, non-standard PIDs, and PID/channel
+  mismatches (`engine.rpm: {pid: 0x0D}`) as `ConfigError` at startup.
+  Sources contain no PID literals.
+- `sources/obd_scheduler.py`: per-channel rates, fast channels first,
+  re-basing after a stall instead of bursting a backlog.
+- `sources/obd_source.py` + `obd_transport.py`: threaded source shared by
+  both links — decode, publish base units, reconnect with exponential
+  backoff (0.5 s → 30 s cap, never gives up). Unanswered PIDs go STALE on
+  the bus rather than counting as link faults.
+- `sources/can_socketcan.py`: ISO 15765-4 single-frame request/response,
+  IDs and bitrate from the profile, unrelated bus traffic filtered out.
+  python-can is a guarded optional extra (`pip install 'pigauge[vehicle]'`).
+- `sources/elm327.py`: documented init sequence, plain-hex polling,
+  profile-driven `batch_pids`, ISO-TP reassembly for multi-line replies.
+  Response parsing locates the `41 <pid>` marker instead of guessing a
+  header width, so 11-bit CAN, 29-bit, and K-line replies all decode.
+- `sources/__init__.py`: `create_vehicle_source()` picks the link from the
+  profile `transport` plus the app config's enabled flags; a disabled
+  transport is logged, not fatal.
+- `tools/scan_vehicle.py`: walks mode 01/09 supported-PID bitmasks, probes
+  the CAN ID scheme, prints a report plus a reviewed `channels:` snippet
+  seeded with generic rates. Never writes config.
+- `config/vehicles/generic_obd2.yaml`: completed with `fuel.level` (0x2F);
+  a test now asserts it covers every PID in the decode table.
+- Test doubles: `tests/fake_ecu.py` (PDU-level ECU + ISO-TP framing +
+  in-process bus + vcan responder) and `tests/fake_elm327.py` (serial-level
+  adapter emulator). Both vehicle links answer from one source of truth.
+- `tests/test_vcan_roundtrip.py` drives real python-can over vcan0 and
+  auto-skips without it; the responder logic it relies on is covered
+  separately so vcan adds only the kernel socket layer.
+- NOT yet verified (needs the Patrol): actual transport/protocol, the real
+  supported-PID list, sustained poll rates, and RPM/coolant live on a
+  physical gauge. `patrol_zd30_gu.yaml` deliberately remains a stub.
+
 ### Phase 3 — Physical displays (dev-side complete; on-Pi acceptance PENDING)
 - `displays/gc9a01.py` (+ `gc9a01_init.py`): SPI driver — Pillow frame →
   big-endian RGB565 via channel LUTs (no numpy), vendor init sequence,

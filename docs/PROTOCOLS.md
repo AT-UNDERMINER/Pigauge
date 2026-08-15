@@ -74,6 +74,54 @@ channels:
 #   trans.temp: {mode: 0x22, pid: 0x1234, formula: "(256*A+B)/10 - 40", rate_hz: 1}
 ```
 
+## Choosing a transport (Phase 4)
+
+Two things decide which vehicle link runs:
+
+- the **vehicle profile** says what the vehicle speaks (`transport: auto | can |
+  elm327`);
+- **config/default.yaml** says which links are fitted and enabled
+  (`sources.can.enabled`, `sources.elm327.enabled`).
+
+`pigauge.sources.create_vehicle_source()` builds a source only when both agree.
+With `transport: auto` and both links enabled, CAN wins — it sustains the fast
+poll rates that an ELM327 cannot. If the profile names a transport that is
+disabled in config, the mismatch is logged and no vehicle source runs (the
+simulator and analog sources are unaffected).
+
+Decode is table-driven: `sources/obd_pids.py` mirrors the mode 01 table above
+(a test parses this file and fails on drift), and the profile supplies only
+which PIDs to poll and how fast. Sources contain no PID literals. A profile
+whose PID does not match its channel — `engine.rpm: {pid: 0x0D}` — is rejected
+at startup with a `ConfigError` rather than silently showing road speed on the
+tacho.
+
+Unanswered PIDs are not errors: the channel stops refreshing and the DataBus
+marks it STALE, so the gauge greys out. Only link-level faults (bus down,
+adapter unplugged, `UNABLE TO CONNECT`) trigger reconnection, which retries
+with exponential backoff from 0.5 s to a 30 s ceiling and never gives up.
+
+## Scanning a vehicle (tools/scan_vehicle.py)
+
+```bash
+python -m pigauge.tools.scan_vehicle --transport elm327 --port /dev/ttyUSB0
+python -m pigauge.tools.scan_vehicle --transport can --interface can0 --out scan.txt
+```
+
+The tool connects, reports the negotiated protocol (ELM327 `ATDP`) or the CAN
+ID scheme that answered, walks the mode 01 and mode 09 supported-PID bitmasks
+(0x00 → 0x20 → 0x40), and prints which channels PiGauge can decode plus a
+`channels:` block to review.
+
+It never writes config. The printed poll rates are the generic defaults, not
+measurements: a scan proves a PID answers once while parked, not that it
+answers ten times a second in traffic. Confirm rates on the road before
+trusting a gauge.
+
+For socketcan the bitrate is set when the interface comes up, not by the tool.
+If nothing answers, re-run after
+`sudo ip link set can0 down && sudo ip link set can0 up type can bitrate 250000`.
+
 ## Nissan Patrol GU ZD30 CRD notes (TO CONFIRM on-vehicle)
 - 2010+ CRD (ZD30DDTi common rail) generally responds to standard OBD2; the
   active protocol on the diagnostic port must be confirmed with
