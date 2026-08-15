@@ -186,13 +186,20 @@ def create_can_source(
     interface: str = DEFAULT_INTERFACE,
     profile_source: str = "<vehicle profile>",
     can_bus: Any = None,
+    source_clock: Callable[[], float] | None = None,
     **transport_options: Any,
 ) -> ObdSource:
-    """Build a CAN-backed :class:`ObdSource` from a vehicle profile."""
+    """Build a CAN-backed :class:`ObdSource` from a vehicle profile.
+
+    ``source_clock`` overrides the poll-schedule clock (tests only); the
+    transport's own response-deadline clock is separate.
+    """
     transport = CanTransport(
         profile.can,
         interface=interface,
         bus=can_bus,
         **transport_options,
     )
-    return ObdSource(bus, transport, build_poll_plan(profile, profile_source))
+    plan = build_poll_plan(profile, profile_source)
+    source_options = {} if source_clock is None else {"clock": source_clock}
+    return ObdSource(bus, transport, plan, **source_options)
